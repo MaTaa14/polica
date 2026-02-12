@@ -19,7 +19,7 @@
       height:60vh;
       border-radius:10px;
       box-shadow:0 4px 20px rgba(0,0,0,0.25);
-      background:#4D4D4D; /* viewer canvas bg */
+      background:#fff; /* viewer canvas bg */
     }
   </style>
 </head>
@@ -58,5 +58,22 @@
     exposure="0.9">
   </model-viewer>
 
+   <script type="module">
+    const viewers = document.querySelectorAll('model-viewer');
+
+    viewers.forEach(mv => {
+      mv.addEventListener('load', () => {
+        for (const mat of mv.model.materials) {
+          const pbr = mat.pbrMetallicRoughness;
+          const [r,g,b,a] = pbr.getBaseColorFactor();
+
+          // increase perceived saturation
+          pbr.setBaseColorFactor([r*1.10, g*1.05, b*1.05, a]);
+        }
+      });
+    });
+  </script>
+
 </body>
 </html>
+
