@@ -58,23 +58,24 @@
     exposure="1">
   </model-viewer>
 
-   <script type="module">
-    const viewers = document.querySelectorAll('model-viewer');
+<script type="module">
+  const viewers = document.querySelectorAll('model-viewer');
 
-    viewers.forEach(mv => {
-      mv.addEventListener('load', () => {
-        for (const mat of mv.model.materials) {
-          const pbr = mat.pbrMetallicRoughness;
-          const [r,g,b,a] = pbr.getBaseColorFactor();
+  viewers.forEach(mv => {
+    mv.addEventListener('load', () => {
+      for (const mat of mv.model.materials) {
+        const pbr = mat.pbrMetallicRoughness;
 
-          // increase perceived saturation
-          pbr.setBaseColorFactor([r*1.10, g*1.05, b*1.05, a]);
-        }
-      });
+        // soften reflections
+        const r = pbr.getRoughnessFactor();
+        pbr.setRoughnessFactor(Math.min(1, r + 0.25));
+      }
     });
-  </script>
+  });
+</script>
 
 </body>
 </html>
+
 
 
