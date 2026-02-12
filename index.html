@@ -65,25 +65,28 @@ const viewers = document.querySelectorAll('model-viewer');
 
 viewers.forEach(mv => {
   mv.addEventListener('load', () => {
+
     for (const mat of mv.model.materials) {
       const pbr = mat.pbrMetallicRoughness;
 
-      // 1) soften glare
-      pbr.setRoughnessFactor(Math.min(1, pbr.getRoughnessFactor() + 0.3));
+      // 1️⃣ TURN OFF METAL MIRROR BEHAVIOR
+      pbr.setMetallicFactor(0.05);
 
-      // 2) remove accidental metal shine
-      pbr.setMetallicFactor(Math.max(0, pbr.getMetallicFactor() - 0.4));
+      // 2️⃣ SOFTEN HIGHLIGHTS
+      pbr.setRoughnessFactor(0.55);
 
-      // 3) tiny color boost (optional)
+      // 3️⃣ KEEP COLOR (slight boost)
       const [r,g,b,a] = pbr.getBaseColorFactor();
-      pbr.setBaseColorFactor([r*1.1, g*1.05, b*1.05, a]);
+      pbr.setBaseColorFactor([r*1.05, g*1.05, b*1.05, a]);
     }
+
   });
 });
 </script>
 
 </body>
 </html>
+
 
 
 
