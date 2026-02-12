@@ -59,23 +59,30 @@
   </model-viewer>
 
 <script type="module">
-  const viewers = document.querySelectorAll('model-viewer');
+const viewers = document.querySelectorAll('model-viewer');
 
-  viewers.forEach(mv => {
-    mv.addEventListener('load', () => {
-      for (const mat of mv.model.materials) {
-        const pbr = mat.pbrMetallicRoughness;
+viewers.forEach(mv => {
+  mv.addEventListener('load', () => {
+    for (const mat of mv.model.materials) {
+      const pbr = mat.pbrMetallicRoughness;
 
-        // soften reflections
-        const r = pbr.getRoughnessFactor();
-        pbr.setRoughnessFactor(Math.min(1, r + 0.25));
-      }
-    });
+      // 1) soften glare
+      pbr.setRoughnessFactor(Math.min(1, pbr.getRoughnessFactor() + 0.3));
+
+      // 2) remove accidental metal shine
+      pbr.setMetallicFactor(Math.max(0, pbr.getMetallicFactor() - 0.4));
+
+      // 3) tiny color boost (optional)
+      const [r,g,b,a] = pbr.getBaseColorFactor();
+      pbr.setBaseColorFactor([r*1.1, g*1.05, b*1.05, a]);
+    }
   });
+});
 </script>
 
 </body>
 </html>
+
 
 
 
